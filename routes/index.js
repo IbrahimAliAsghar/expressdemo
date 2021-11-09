@@ -5,33 +5,33 @@ const https = require('https');
 var FormData = require('form-data');
 const os = require('os');
 const session = require('express-session');
-const faceapi = require("face-api.js");  
-const canvas = require("canvas");
+// const faceapi = require("face-api.js");  
+// const canvas = require("canvas");
 const fs = require("fs").promises;
 
-const { Canvas, Image, ImageData } = canvas  
-faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
-faceapi.env.monkeyPatch({ fetch: fetch });
-const faceDetectionNet = faceapi.nets.ssdMobilenetv1
+// const { Canvas, Image, ImageData } = canvas  
+// faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
+// faceapi.env.monkeyPatch({ fetch: fetch });
+// const faceDetectionNet = faceapi.nets.ssdMobilenetv1
 
-// SsdMobilenetv1Options
-const minConfidence = 0.5
+// // SsdMobilenetv1Options
+// const minConfidence = 0.5
 
 
-function getFaceDetectorOptions(net) {  
-  return net === faceapi.nets.ssdMobilenetv1
-      ? new faceapi.SsdMobilenetv1Options({ minConfidence })
-      : (net === faceapi.nets.tinyFaceDetector
-          ? new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold })
-          : new faceapi.MtcnnOptions({ minFaceSize, scaleFactor })
-      )
-}
+// function getFaceDetectorOptions(net) {  
+//   return net === faceapi.nets.ssdMobilenetv1
+//       ? new faceapi.SsdMobilenetv1Options({ minConfidence })
+//       : (net === faceapi.nets.tinyFaceDetector
+//           ? new faceapi.TinyFaceDetectorOptions({ inputSize, scoreThreshold })
+//           : new faceapi.MtcnnOptions({ minFaceSize, scaleFactor })
+//       )
+// }
 
-const faceDetectionOptions = getFaceDetectorOptions(faceDetectionNet)
-faceDetectionNet.loadFromDisk('./public/models');
-faceapi.nets.faceLandmark68Net.loadFromDisk('./public/models');
-faceapi.nets.faceRecognitionNet.loadFromDisk('./public/models');
-faceapi.nets.faceExpressionNet.loadFromDisk('./public/models');
+// const faceDetectionOptions = getFaceDetectorOptions(faceDetectionNet)
+// faceDetectionNet.loadFromDisk('./public/models');
+// faceapi.nets.faceLandmark68Net.loadFromDisk('./public/models');
+// faceapi.nets.faceRecognitionNet.loadFromDisk('./public/models');
+// faceapi.nets.faceExpressionNet.loadFromDisk('./public/models');
 
 
 //const { BrowserWindow } = require('electron')
