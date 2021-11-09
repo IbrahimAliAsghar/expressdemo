@@ -1,0 +1,28 @@
+{
+  "name": "denningportal",
+  "version": "1.0.0",
+  "description": "Denning Portal",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^3.3.0",
+    "bootstrap": "4.2.1",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "form-data": "^4.0.0",
+    "formdata-node": "^4.3.1",
+    "jquery": "3.3.1",
+    "multer": "^1.4.3",
+    "node-fetch": "^2.6.5",
+    "nodemon": "^2.0.2",
+    "pizzip": "^3.0.6"
+  },
+  "engines": {
+    "node": "12.20.2"
+  }
+}
