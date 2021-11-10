@@ -38,17 +38,34 @@
         height: 50vh;
       }
 
+      .main-container{
+        margin-top: 3%;
+      }
+
       /* CSS */
       .message-container {
         width: 100%;
         flex: 0 0 auto;
         height: 10vh;
-        margin-top: 35vh;
+        margin-top: 30vh;
       }
     }
 
     /* Extra Small Devices, Phones */
-    @media only screen and (min-width : 480px) {}
+    @media only screen and (min-width : 480px) {
+      .message-container {
+        width: 100%;
+        flex: 0 0 auto;
+        height: 10vh;
+        margin-top: 25vh;
+      }
+
+      .main-container{
+        margin-top: 5%;
+      }
+
+
+    }
 
     /* Small Devices, Tablets */
     @media only screen and (min-width : 768px) {
@@ -105,7 +122,7 @@
       </div>
     </div>
 
-    <div class="mt-5 row">
+    <div class="main-container row">
       <div class="webcamcontainer">
         <video id="webcam" autoplay playsinline></video>
 
