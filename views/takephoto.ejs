@@ -43,6 +43,7 @@
         width: 100%;
         flex: 0 0 auto;
         height: 10vh;
+        margin-top: 35vh;
       }
     }
 
@@ -65,22 +66,22 @@
     }
 
     #loading {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  opacity: 0.7;
-  background-color: #fff;
-  z-index: 99;
-}
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0.7;
+      background-color: #fff;
+      z-index: 99;
+    }
 
-#loading-image {
-  z-index: 1000;
-}
+    #loading-image {
+      z-index: 1000;
+    }
   </style>
   <meta charset="UTF-8">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
@@ -94,8 +95,8 @@
   <div id="loading">
     <img id="loading-image" src="loading.gif" alt="Loading..." />
   </div>
-  <div style="height: 10vh;" class="mt-3 container">
-    <div class="row">
+  <div class="mt-3 container">
+    <div style="height: 10vh;"  class="row">
       <div class="col-sm text-center">
         <img src="https://www.denningportal.com/dls_test/assets/images/logo-denning-law-school.png" id="your-img"
           alt="User Icon" />
@@ -122,17 +123,17 @@
           </svg> Take Picture</button>
         <div id="message-content" style="font-size: large;" class="p-3 mt-5 mb-2 bg-info text-center text-white">please
           Verify your face to access portal</div>
-          <div class="notes">
-            <p>Please make sure that</p>
-              <ol>
-                <li style="text-align: left">There is not light reflecting the camera from background</li>
-                <li style="text-align: left">That only your face is visible in the camera</li>
-                <li style="text-align: left">Your face is facing front towards the camera.</li>
-    
-              </ol>
-          </div>
+        <div class="notes">
+          <p>Please make sure that</p>
+          <ol>
+            <li style="text-align: left">There is not light reflecting the camera from background</li>
+            <li style="text-align: left">That only your face is visible in the camera</li>
+            <li style="text-align: left">Your face is facing front towards the camera.</li>
+
+          </ol>
+        </div>
       </div>
-     
+
     </div>
   </div>
 
@@ -170,27 +171,27 @@
   var interval;
 
   Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-  faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-  faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-  faceapi.nets.faceExpressionNet.loadFromUri("/models"),
-]).then(startVideo);
+    faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+    faceapi.nets.faceExpressionNet.loadFromUri("/models"),
+  ]).then(startVideo);
 
   function startVideo() {
     navigator.getUserMedia(
       { video: {} },
-      function(stream) {
+      function (stream) {
         video.srcObject = stream
         havewebsnap = true;
       },
       err => console.error(err)
     );
   }
-  document.getElementById("take_picture").setAttribute("disabled","disabled");
+  document.getElementById("take_picture").setAttribute("disabled", "disabled");
 
-  
+
   video.addEventListener("playing", () => {
-     canvas = faceapi.createCanvasFromMedia(video);
+    canvas = faceapi.createCanvasFromMedia(video);
     document.body.append(canvas);
 
     const displaySize = { width: video.scrollWidth, height: video.scrollHeight };
@@ -198,37 +199,37 @@
 
     document.getElementById("loading").style.display = 'none';
 
-    interval =  setInterval(async () => {
+    interval = setInterval(async () => {
       const detections = await faceapi
-      .detectAllFaces(video)
-      .withFaceLandmarks()
-      .withFaceExpressions();
-       
+        .detectAllFaces(video)
+        .withFaceLandmarks()
+        .withFaceExpressions();
+
 
       //document.getElementById("faceFound").innerHTML =  detections.length + "Faces Found" ;
       //document.getElementById("faceFound").css("color","red");
 
-      if(detections.length < 1){
-            document.getElementById("faceFound").innerHTML =  "No" + "Face Found" ;
-            document.getElementById("take_picture").setAttribute("disabled","disabled");
-            document.getElementById("faceFound").style.color = "red";
+      if (detections.length < 1) {
+        document.getElementById("faceFound").innerHTML = "No" + "Face Found";
+        document.getElementById("take_picture").setAttribute("disabled", "disabled");
+        document.getElementById("faceFound").style.color = "red";
 
 
       }
-      else if(detections.length > 1){
-            document.getElementById("faceFound").innerHTML =  "Multiple" + "Faces Found" ;
-            document.getElementById("take_picture").setAttribute("disabled","disabled");
-            document.getElementById("faceFound").style.color = "red";
+      else if (detections.length > 1) {
+        document.getElementById("faceFound").innerHTML = "Multiple" + "Faces Found";
+        document.getElementById("take_picture").setAttribute("disabled", "disabled");
+        document.getElementById("faceFound").style.color = "red";
 
 
-      }else {
-            
-            document.getElementById("faceFound").innerHTML =  "One" + "Face Found" ;
-            document.getElementById("faceFound").style.color = "green";
-            document.getElementById("take_picture").removeAttribute("disabled");
+      } else {
+
+        document.getElementById("faceFound").innerHTML = "One" + "Face Found";
+        document.getElementById("faceFound").style.color = "green";
+        document.getElementById("take_picture").removeAttribute("disabled");
 
       }
-      
+
 
       //const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
@@ -236,112 +237,112 @@
 
       //faceapi.draw.drawDetections(canvas, resizedDetections);
     }, 300);
-    });
+  });
 
-    document.getElementById("take_picture").addEventListener("click",async function () {
-
-
-      if (!havewebsnap) {
-        alert("Please allow portal permission to open webcam");
-        navigator.getUserMedia(
-      { video: {} }, function(stream) {
-        video.srcObject = stream
-        havewebsnap = true;
-      },
-     
-      err => console.error(err)
-    );
-        return;
-      }
-      clearInterval(interval);
-      document.getElementById("faceFound").innerHTML =  "" ;
-
-      //let canvas = document.querySelector("#canvas");
-      let picture =  await faceapi
-        .detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
-
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-      var fieldNameElement = document.getElementById('message-content');
-
-      
-
-        const faceMatcher = new faceapi.FaceMatcher(picture)
-        
-   	    let image_data_url = canvas.toDataURL('image/jpeg');
-        let canvas2 = document.querySelectorAll("canvas");
-        canvas2[0].style.display= 'none';
-      	// data url of the image
-   	    console.log(image_data_url);
+  document.getElementById("take_picture").addEventListener("click", async function () {
 
 
-      var formData = new FormData();
-      formData.append("image", image_data_url);
-      //formData.append("image_tensor", faceMatcher);
+    if (!havewebsnap) {
+      alert("Please allow portal permission to open webcam");
+      navigator.getUserMedia(
+        { video: {} }, function (stream) {
+          video.srcObject = stream
+          havewebsnap = true;
+        },
 
-      // for (var key of formData.entries()) {
-      //     console.log(key[0] + ', ' + key[1]);
-      // }
-      fieldNameElement.innerText = 'Processing...';
+        err => console.error(err)
+      );
+      return;
+    }
+    clearInterval(interval);
+    document.getElementById("faceFound").innerHTML = "";
 
-      fetch('CurrentImage', {
-        method: 'POST',
-        body: formData,
-      }).then(response => response.text())
-        .then(async function(response)  {
+    //let canvas = document.querySelector("#canvas");
+    let picture = await faceapi
+      .detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
 
-          console.log(response)
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    var fieldNameElement = document.getElementById('message-content');
 
-          if (response.slice(0, 4) == "Face") {
-            alert(response);
 
+
+    const faceMatcher = new faceapi.FaceMatcher(picture)
+
+    let image_data_url = canvas.toDataURL('image/jpeg');
+    let canvas2 = document.querySelectorAll("canvas");
+    canvas2[0].style.display = 'none';
+    // data url of the image
+    console.log(image_data_url);
+
+
+    var formData = new FormData();
+    formData.append("image", image_data_url);
+    //formData.append("image_tensor", faceMatcher);
+
+    // for (var key of formData.entries()) {
+    //     console.log(key[0] + ', ' + key[1]);
+    // }
+    fieldNameElement.innerText = 'Processing...';
+
+    fetch('CurrentImage', {
+      method: 'POST',
+      body: formData,
+    }).then(response => response.text())
+      .then(async function (response) {
+
+        console.log(response)
+
+        if (response.slice(0, 4) == "Face") {
+          alert(response);
+
+          fieldNameElement.innerText = 'Please retake Photo';
+
+        }
+        else if (response.slice(0, 4) == "http") {
+          window.location.href = response;
+        }
+        else if (response.slice(0, 8) == "approved") {
+
+          const myArray = response.split("**");
+          var visitorId = myArray[2];
+
+          const imgUrl = window.location.origin + `/${visitorId}.jpeg`
+          const img = await faceapi.fetchImage(imgUrl)
+          //const img = await canvas.loadImage(imgUrl);
+          // detect the face with the highest score in the image and compute it's landmarks and face descriptor
+          const fullFaceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+
+          if (!fullFaceDescription) {
+            console.log("No faces Found");
+          }
+
+
+          const bestMatch = faceMatcher.findBestMatch(fullFaceDescription.descriptor)
+          console.log(bestMatch.toString())
+          if (bestMatch.toString().indexOf("person") >= 0) {
+            window.location.href = myArray[1];
+          } else {
+            alert("Face Verification Failed, Kindly retake photo to access portal");
             fieldNameElement.innerText = 'Please retake Photo';
-
-          }
-          else if (response.slice(0, 4) == "http") {
-            window.location.href = response;
-          }
-          else if (response.slice(0, 8) == "approved") {
-              
-            const myArray = response.split("**");
-              var visitorId = myArray[2];
-              
-                const imgUrl = window.location.origin + `/${visitorId}.jpeg`
-                const img = await faceapi.fetchImage(imgUrl)
-                //const img = await canvas.loadImage(imgUrl);
-                // detect the face with the highest score in the image and compute it's landmarks and face descriptor
-                const fullFaceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-                
-                if (!fullFaceDescription) {
-                  console.log("No faces Found");
-                }
-              
-              
-              const bestMatch = faceMatcher.findBestMatch(fullFaceDescription.descriptor)
-              console.log(bestMatch.toString())
-                if(bestMatch.toString().indexOf("person") >= 0){
-                  window.location.href = myArray[1];
-                }else{
-                  alert("Face Verification Failed, Kindly retake photo to access portal");
-                  fieldNameElement.innerText = 'Please retake Photo';
-                }
-           
           }
 
-
-          else {
-            alert(response);
-            
-            window.location.href = window.location.origin;
-
-            // var window = remote.getCurrentWindow();
-            // window.close();
-          }
-
-        })
-        .catch(err => console.log(err))
+        }
 
 
-    });
+        else {
+          alert(response);
+
+          window.location.href = window.location.origin;
+
+          // var window = remote.getCurrentWindow();
+          // window.close();
+        }
+
+      })
+      .catch(err => console.log(err))
+
+
+  });
 
 
 
