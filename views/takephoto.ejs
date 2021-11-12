@@ -35,7 +35,7 @@
       .webcamcontainer {
         width: 100%;
         flex: 0 0 auto;
-        height: 50vh;
+        height: 40vh;
       }
 
       .main-container{
@@ -51,13 +51,34 @@
       }
     }
 
+
+    @media only screen and (min-width : 410px) {
+      .webcamcontainer {
+        width: 100%;
+        flex: 0 0 auto;
+        height: 45vh;
+      }
+
+      .main-container{
+        margin-top: 3%;
+      }
+
+      /* CSS */
+      .message-container {
+        width: 100%;
+        flex: 0 0 auto;
+        height: 10vh;
+        margin-top: 20vh;
+      }
+    }
+
     /* Extra Small Devices, Phones */
     @media only screen and (min-width : 480px) {
       .message-container {
         width: 100%;
         flex: 0 0 auto;
         height: 10vh;
-        margin-top: 25vh;
+        margin-top: 20vh;
       }
 
       .main-container{
@@ -215,6 +236,7 @@
     faceapi.matchDimensions(canvas, displaySize);
 
     document.getElementById("loading").style.display = 'none';
+    document.getElementById("faceFound").innerHTML = "Detecting Face...";
 
     interval = setInterval(async () => {
       const detections = await faceapi
