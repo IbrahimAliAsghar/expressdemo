@@ -8,6 +8,7 @@ const session = require('express-session');
 // const faceapi = require("face-api.js");  
 // const canvas = require("canvas");
 const fs = require("fs").promises;
+const imageDataURI = require("image-data-uri");
 
 // const { Canvas, Image, ImageData } = canvas  
 // faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
@@ -44,10 +45,10 @@ const fs = require("fs").promises;
 router.get('/', function (req, res, next) {
 
 
-  if(!isCallerMobile(req)){
+  if (!isCallerMobile(req)) {
     res.render('index', { title: 'Express', msg: "" });
 
-  }else{
+  } else {
     res.render('index-mobile', { title: 'Express', msg: "" });
 
   }
@@ -127,7 +128,7 @@ router.get('/takephoto', function (req, res, next) {
 });
 
 
-router.post('/CurrentImage',  (req, res, next) => {
+router.post('/CurrentImage', (req, res, next) => {
 
   //console.log(req.body);
 
@@ -152,7 +153,7 @@ router.post('/CurrentImage',  (req, res, next) => {
     headers: {
       'Authorization': 'Basic ' + Buffer.from('denadmin:Denn1234', 'binary').toString('base64')
     }
-  }).then(res => res.json())
+  }).then(resp => resp.json())
     .then(async (json) => {
       //console.log(json);
       if (json.status == 200) {
@@ -185,82 +186,123 @@ router.post('/CurrentImage',  (req, res, next) => {
 
             }
             else if (app.status == "approved") {
-              var key = json.student_id + "::" + json.email + "::" + app.device_id + "::" + json.student_code;
+              // var key = json.student_id + "::" + json.email + "::" + app.device_id + "::" + json.student_code;
 
-                var url = "https://www.denningportal.com/dls_test/login/app_login/" + Buffer.from(key).toString('base64');
-              return res.send("approved" + "**" +url  + "**" + session.visitorId);
+              //   var url = "https://www.denningportal.com/dls_test/login/app_login/" + Buffer.from(key).toString('base64');
+              // return res.send("approved" + "**" +url  + "**" + session.visitorId);
 
               Current_device = app;
 
-              
-               
-              const imgUrl = `${session.visitorId}.jpeg`
-              //const img = await faceapi.fetchImage(imgUrl)
-              const img = await canvas.loadImage(imgUrl);
-              // detect the face with the highest score in the image and compute it's landmarks and face descriptor
-              const fullFaceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-              
-              if (!fullFaceDescription) {
-                console.log("No faces Found");
-              }
-              
-              
-              var imageMatcher = req.body.image_tensor;
-              const bestMatch = imageMatcher.findBestMatch(fullFaceDescription.descriptor)
-              console.log(bestMatch.toString())
-
-              if (bestMatch.verified == true) {
 
 
-                var key = json.student_id + "::" + json.email + "::" + app.device_id + "::" + json.student_code;
+              // const imgUrl = `${session.visitorId}.jpeg`
+              // //const img = await faceapi.fetchImage(imgUrl)
+              // const img = await canvas.loadImage(imgUrl);
+              // // detect the face with the highest score in the image and compute it's landmarks and face descriptor
+              // const fullFaceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
 
-                var url = "https://www.denningportal.com/dls_test/login/app_login/" + Buffer.from(key).toString('base64');
-                return res.send(url);
-
-              } else {
-                return res.send("Face Verification Failed, Kindly retake photo to access portal")
+              // if (!fullFaceDescription) {
+              //   console.log("No faces Found");
+              // }
 
 
-              }
+              // var imageMatcher = req.body.image_tensor;
+              // const bestMatch = imageMatcher.findBestMatch(fullFaceDescription.descriptor)
+              // console.log(bestMatch.toString())
+
+              // if (bestMatch.verified == true) {
+
+
+              //   var key = json.student_id + "::" + json.email + "::" + app.device_id + "::" + json.student_code;
+
+              //   var url = "https://www.denningportal.com/dls_test/login/app_login/" + Buffer.from(key).toString('base64');
+              //   return res.send(url);
+
+              // } else {
+              //   return res.send("Face Verification Failed, Kindly retake photo to access portal")
+
+
+              // }
 
               let formData = new FormData();
 
-              // // let temp = atob(app.profile_image);
-              // let temp2 = Buffer.from(app.profile_image, 'base64').toString();
+              //const imgUrl = `http://localhost:3000/${session.visitorId}.jpeg`;
 
-              // formData.append('base1', CurrentImage);
-              // formData.append('base2', temp2);
+              imageDataURI.encodeFromFile(`./public/${session.visitorId}.jpeg`)
+              .then(resBase64 => {
+                //console.log(res)
+                
+                
+                //let temp2 = Buffer.from(res, 'base64').toString();
 
-
-              fetch('http://172.104.188.61/verify', {
-                method: 'POST',
-                body: formData,
-
-              }).then(res => res.json())
-                .then(jsonp => {
-                  console.log(jsonp);
-                  if (jsonp.verified == true) {
-
-                    //var window = remote.getCurrentWindow();
-
-                    // const win = new BrowserWindow({ width: 800, height: 600 })
-
-                    var key = json.student_id + "::" + json.email + "::" + app.device_id + "::" + json.student_code;
-
-                    var url = "https://www.denningportal.com/dls_test/login/app_login/" + Buffer.from(key).toString('base64');
-                    return res.send(url);
+                formData.append('base1', CurrentImage);
+                formData.append('base2', resBase64);
 
 
-                    // win.loadURL(url)
-                    // window.close();
+
+                fetch('http://172.104.188.61:5000/verify', {
+                  method: 'POST',
+                  body: formData,
+
+                }).then(respython => respython.json())
+                  .then(jsonp => {
+                    console.log(jsonp);
+                    if (jsonp.verified == true) {
+
+                      //var window = remote.getCurrentWindow();
+
+                      // const win = new BrowserWindow({ width: 800, height: 600 })
+
+                      var key = json.student_id + "::" + json.email + "::" + app.device_id + "::" + json.student_code;
+
+                      var url = "https://www.denningportal.com/dls_test/login/app_login/" + Buffer.from(key).toString('base64');
+                      return res.send(url);
 
 
-                  } else {
+                      // win.loadURL(url)
+                      // window.close();
+
+
+                    } else {
+                      return res.send("Face Verification Failed, Kindly retake photo to access portal")
+
+
+                    }
+                  }).catch(err => {
+                    console.log(err)
                     return res.send("Face Verification Failed, Kindly retake photo to access portal")
 
 
-                  }
-                });
+                  });
+
+              
+              
+              
+              
+              
+              })
+              .catch(err => console.log(err))
+
+
+              //const contents = await fs.readFileSync(`./public/${session.visitorId}.jpeg`, {encoding: 'base64'});
+
+
+
+             // var imgStr = session.visitorId + '.jpeg';
+              //fs.readFile(`./public/${session.visitorId}.jpeg`, function (err, data) {
+                //if (err){
+                // console.log(err) 
+                //} // Fail if the file can't be read.
+                //const img = await fetch(imgUrl);
+                // // let temp = atob(app.profile_image);
+               
+
+
+                //res.writeHead(200, {'Content-Type': 'image/jpeg'});
+                //res.end(data); // Send the file data to the browser.
+              
+
+
             }
 
 
@@ -273,7 +315,7 @@ router.post('/CurrentImage',  (req, res, next) => {
             // await bucket.file(fileName).createWriteStream().end(CurrentImage)
 
             const data = CurrentImage.replace(/^data:image\/\w+;base64,/, "");
-  
+
             const buf = Buffer.from(data, "base64");
             await fs.writeFile(`./public/${session.visitorId}.jpeg`, buf);
 
@@ -321,7 +363,7 @@ router.post('/CurrentImage',  (req, res, next) => {
         else {
 
           const data = CurrentImage.replace(/^data:image\/\w+;base64,/, "");
-  
+
           const buf = Buffer.from(data, "base64");
           await fs.writeFile(`./public/${session.visitorId}.jpeg`, buf);
 

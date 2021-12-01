@@ -210,9 +210,9 @@
 
   Promise.all([
     faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-    faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-    faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-    faceapi.nets.faceExpressionNet.loadFromUri("/models"),
+    // faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+    // faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+    // faceapi.nets.faceExpressionNet.loadFromUri("/models"),
   ]).then(startVideo);
 
   function startVideo() {
@@ -240,9 +240,9 @@
 
     interval = setInterval(async () => {
       const detections = await faceapi
-        .detectAllFaces(video)
-        .withFaceLandmarks()
-        .withFaceExpressions();
+        .detectAllFaces(video);
+        // .withFaceLandmarks()
+        // .withFaceExpressions();
 
 
       //document.getElementById("faceFound").innerHTML =  detections.length + "Faces Found" ;
@@ -297,17 +297,17 @@
     document.getElementById("faceFound").innerHTML = "";
 
     //let canvas = document.querySelector("#canvas");
-    let picture = await faceapi
-      .detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
+    // let picture = await faceapi
+    //   .detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
 
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     var fieldNameElement = document.getElementById('message-content');
 
 
 
-    const faceMatcher = new faceapi.FaceMatcher(picture)
+    //const faceMatcher = new faceapi.FaceMatcher(picture)
 
-    let image_data_url = canvas.toDataURL('image/jpeg');
+    let image_data_url = canvas.toDataURL('image/png');
     let canvas2 = document.querySelectorAll("canvas");
     canvas2[0].style.display = 'none';
     // data url of the image
